@@ -1,0 +1,46 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	user-select: none;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color-scheme: dark;
+	overflow: hidden;
+
+}
+
+#app {
+	/* background-color: #090a0f; */
+	position: fixed;
+	height: 100vh;
+	width: 100%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	
+}
+
+/*for PC*/
+@media only screen and (min-width: 600px) {
+
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(100, 100, 100, 1) rgba(0,0,0,.4);
+}
+
+::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: rgba(178, 178, 178, 0.5);
+}
