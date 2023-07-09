@@ -9,18 +9,23 @@ int ledsX[LED_COUNT][3]; // array for storing random pixel values
 
 void updateColor (byte r, byte g, byte b) {
   for (int i = 0; i < LED_COUNT; i++) {
-    leds[i].setRGB(r,g,b);
+    leftled[i].setRGB(r,g,b);
+    rightled[i].setRGB(r,g,b);
   }
 }
 
 void updatePixel (int i, byte r, byte g, byte b) {
-  leds[i].setRGB(r,g,b);
+  leftled[i].setRGB(r,g,b);
+  rightled[i].setRGB(r,g,b);
 }
 
 void setPixel (int Pixel, byte red, byte green, byte blue) {
-  leds[Pixel].r = red;
-  leds[Pixel].g = green;
-  leds[Pixel].b = blue;
+  leftled[Pixel].r = red;
+  rightled[Pixel].r = red;
+  leftled[Pixel].g = green;
+  rightled[Pixel].g = green;
+  leftled[Pixel].b = blue;
+  rightled[Pixel].b = blue;
 }
 
 void setAll (byte red, byte green, byte blue) {
@@ -31,7 +36,8 @@ void setAll (byte red, byte green, byte blue) {
 }
 void fadeall( ) {
   for (int i = 0; i < LED_COUNT; i++) {
-    leds[i].nscale8(250); 
+    leftled[i].nscale8(250); 
+    rightled[i].nscale8(250); 
   } 
 }
 
@@ -43,7 +49,8 @@ void rainbowFade() {
     ihue = 0;
   }
   for (int idex = 0 ; idex < LED_COUNT; idex++) {
-    leds[idex] = CHSV(ihue, isat, 255);
+    leftled[idex] = CHSV(ihue, isat, 255);
+    rightled[idex] = CHSV(ihue, isat, 255);
   }
   LEDS.show();
   delay(_delay);
@@ -60,7 +67,8 @@ void rainbowLoop() {
   if (ihue > 255){
     ihue = 0;
   }
-  leds[idex] = CHSV(ihue, isat, 255);
+  leftled[idex] = CHSV(ihue, isat, 255);
+  rightled[idex] = CHSV(ihue, isat, 255);
   LEDS.show();
   delay(_delay);
 }
@@ -99,9 +107,12 @@ void radiation() {
     int j0 = (i + LED_COUNT - N12) % LED_COUNT;
     int j1 = (j0 + N3) % LED_COUNT;
     int j2 = (j1 + N3) % LED_COUNT;
-    leds[j0] = CHSV(_hue, _sat, ibright);
-    leds[j1] = CHSV(_hue, _sat, ibright);
-    leds[j2] = CHSV(_hue, _sat, ibright);
+    leftled[j0] = CHSV(_hue, _sat, ibright);
+    leftled[j1] = CHSV(_hue, _sat, ibright);
+    leftled[j2] = CHSV(_hue, _sat, ibright);
+    rightled[j0] = CHSV(_hue, _sat, ibright);
+    rightled[j1] = CHSV(_hue, _sat, ibright);
+    rightled[j2] = CHSV(_hue, _sat, ibright);
   }
   LEDS.show();
   delay(_delay);
@@ -125,10 +136,12 @@ void popHorizontal() {
   }
   for (int i = 0; i < LED_COUNT; i++) {
     if (i == ix) {
-      leds[i] = CHSV(_hue, _sat, 255);
+      leftled[i] = CHSV(_hue, _sat, 255);
+      rightled[i] = CHSV(_hue, _sat, 255);
     }
     else {
-      leds[i].r = 0; leds[i].g = 0; leds[i].b = 0;
+      leftled[i].r = 0; leftled[i].g = 0; leftled[i].b = 0;
+      rightled[i].r = 0; rightled[i].g = 0; rightled[i].b = 0;
     }
   }
   LEDS.show();
@@ -153,25 +166,34 @@ void pacman() {
     for (int i = 0 ; i < LED_COUNT; i++) {
       updatePixel(i, 255, 255, 0);
     }
-    leds[s].r = 0; leds[s].g = 0; leds[s].b = 0;
+    leftled[s].r = 0; leftled[s].g = 0; leftled[s].b = 0;
+    rightled[s].r = 0; rightled[s].g = 0; rightled[s].b = 0;
   }
   if (pcounter == 2 || pcounter == 4) {
     for (int i = 0 ; i < LED_COUNT; i++) {
       updatePixel(i, 255, 255, 0);
     }
-    leds[s - 1].r = 0; leds[s - 1].g = 0; leds[s - 1].b = 0;
-    leds[s].r = 0; leds[s].g = 0; leds[s].b = 0;
-    leds[s + 1].r = 0; leds[s + 1].g = 0; leds[s + 1].b = 0;
+    leftled[s - 1].r = 0; leftled[s - 1].g = 0; leftled[s - 1].b = 0;
+    leftled[s].r = 0; leftled[s].g = 0; leftled[s].b = 0;
+    leftled[s + 1].r = 0; leftled[s + 1].g = 0; leftled[s + 1].b = 0;
+    rightled[s - 1].r = 0; rightled[s - 1].g = 0; rightled[s - 1].b = 0;
+    rightled[s].r = 0; rightled[s].g = 0; rightled[s].b = 0;
+    rightled[s + 1].r = 0; rightled[s + 1].g = 0; rightled[s + 1].b = 0;
   }
   if (pcounter == 3) {
     for (int i = 0 ; i < LED_COUNT; i++) {
       updatePixel(i, 255, 255, 0);
     }
-    leds[s - 2].r = 0; leds[s - 2].g = 0; leds[s - 2].b = 0;
-    leds[s - 1].r = 0; leds[s - 1].g = 0; leds[s - 1].b = 0;
-    leds[s].r = 0; leds[s].g = 0; leds[s].b = 0;
-    leds[s + 1].r = 0; leds[s + 1].g = 0; leds[s + 1].b = 0;
-    leds[s + 2].r = 0; leds[s + 2].g = 0; leds[s + 2].b = 0;
+    leftled[s - 2].r = 0; leftled[s - 2].g = 0; leftled[s - 2].b = 0;
+    leftled[s - 1].r = 0; leftled[s - 1].g = 0; leftled[s - 1].b = 0;
+    leftled[s].r = 0; leftled[s].g = 0; leftled[s].b = 0;
+    leftled[s + 1].r = 0; leftled[s + 1].g = 0; leftled[s + 1].b = 0;
+    leftled[s + 2].r = 0; leftled[s + 2].g = 0; leftled[s + 2].b = 0;
+    rightled[s - 2].r = 0; rightled[s - 2].g = 0; rightled[s - 2].b = 0;
+    rightled[s - 1].r = 0; rightled[s - 1].g = 0; rightled[s - 1].b = 0;
+    rightled[s].r = 0; rightled[s].g = 0; rightled[s].b = 0;
+    rightled[s + 1].r = 0; rightled[s + 1].g = 0; rightled[s + 1].b = 0;
+    rightled[s + 2].r = 0; rightled[s + 2].g = 0; rightled[s + 2].b = 0;
   }
   LEDS.show();
   delay(_delay);
@@ -182,7 +204,8 @@ void pacman() {
 void randomBurst() {
   idex = random(0, LED_COUNT);
   ihue = random(0, 255);
-  leds[idex] = CHSV(ihue, isat, 255);
+  leftled[idex] = CHSV(ihue, isat, 255);
+  rightled[idex] = CHSV(ihue, isat, 255);
   LEDS.show();
   delay(_delay);
 }
@@ -205,10 +228,12 @@ void colorBounce() {
   }
   for (int i = 0; i < LED_COUNT; i++) {
     if (i == idex) {
-      leds[i] = CHSV(_hue, isat, 255);
+      leftled[i] = CHSV(_hue, isat, 255);
+      rightled[i] = CHSV(_hue, isat, 255);
     }
     else {
-      leds[i] = CHSV(0, 0, 0);
+      leftled[i] = CHSV(0, 0, 0);
+      rightled[i] = CHSV(0, 0, 0);
     }
   }
   LEDS.show();
@@ -240,28 +265,36 @@ void colorBounceFade() {
 
   for (int i = 0; i < LED_COUNT; i++ ) {
     if (i == idex) {
-      leds[i] = CHSV(_hue, isat, 255);
+      leftled[i] = CHSV(_hue, isat, 255);
+      rightled[i] = CHSV(_hue, isat, 255);
     }
     else if (i == iL1) {
-      leds[i] = CHSV(_hue, isat, 150);
+      leftled[i] = CHSV(_hue, isat, 150);
+      rightled[i] = CHSV(_hue, isat, 150);
     }
     else if (i == iL2) {
-      leds[i] = CHSV(_hue, isat, 80);
+      leftled[i] = CHSV(_hue, isat, 80);
+      rightled[i] = CHSV(_hue, isat, 80);
     }
     else if (i == iL3) {
-      leds[i] = CHSV(_hue, isat, 20);
+      leftled[i] = CHSV(_hue, isat, 20);
+      rightled[i] = CHSV(_hue, isat, 20);
     }
     else if (i == iR1) {
-      leds[i] = CHSV(_hue, isat, 150);
+      leftled[i] = CHSV(_hue, isat, 150);
+      rightled[i] = CHSV(_hue, isat, 150);
     }
     else if (i == iR2) {
-      leds[i] = CHSV(_hue, isat, 80);
+      leftled[i] = CHSV(_hue, isat, 80);
+      rightled[i] = CHSV(_hue, isat, 80);
     }
     else if (i == iR3) {
-      leds[i] = CHSV(_hue, isat, 20);
+      leftled[i] = CHSV(_hue, isat, 20);
+      rightled[i] = CHSV(_hue, isat, 20);
     }
     else {
-      leds[i] = CHSV(0, 0, 0);
+      leftled[i] = CHSV(0, 0, 0);
+      rightled[i] = CHSV(0, 0, 0);
     }
   }
   LEDS.show();
@@ -281,13 +314,16 @@ void redBlueBounce() {
 
   for (int i = 0; i < LED_COUNT; i++) {
     if (i == idexR) {
-      leds[i] = CHSV(_hue, isat, 255);
+      leftled[i] = CHSV(_hue, isat, 255);
+      rightled[i] = CHSV(_hue, isat, 255);
     }
     else if (i == idexB) {
-      leds[i] = CHSV(thathue, isat, 255);
+      leftled[i] = CHSV(thathue, isat, 255);
+      rightled[i] = CHSV(thathue, isat, 255);
     }
     else {
-      leds[i] = CHSV(0, 0, 0);
+      leftled[i] = CHSV(0, 0, 0);
+      rightled[i] = CHSV(0, 0, 0);
     }
   }
   LEDS.show();
@@ -312,8 +348,10 @@ void rotatingRedBlue() {
   int idexR = idex;
   int idexB = antipodal_index(idexR);
   int thathue =(_hue + 160) % 255;
-  leds[idexR] = CHSV(_hue, isat, 255);
-  leds[idexB] = CHSV(thathue, isat, 255);
+  leftled[idexR] = CHSV(_hue, isat, 255);
+  rightled[idexB] = CHSV(thathue, isat, 255);
+  leftled[idexR] = CHSV(_hue, isat, 255);
+  rightled[idexB] = CHSV(thathue, isat, 255);
   LEDS.show();
   delay(_delay);
 }
@@ -326,7 +364,8 @@ void flicker() {
   int random_bool = random(0, random_bright);
   if (random_bool < 10) {
     for (int i = 0 ; i < LED_COUNT; i++) {
-      leds[i] = CHSV(160, 50, random_bright);
+      leftled[i] = CHSV(160, 50, random_bright);
+      rightled[i] = CHSV(160, 50, random_bright);
     }
     LEDS.show();
     delay(random_delay);
@@ -346,8 +385,10 @@ void fadeVertical() {
   if (ibright > 255) {
     ibright = 0;
   }
-  leds[idexA] = CHSV(_hue, isat, ibright);
-  leds[idexB] = CHSV(_hue, isat, ibright);
+  leftled[idexA] = CHSV(_hue, isat, ibright);
+  leftled[idexB] = CHSV(_hue, isat, ibright);
+  rightled[idexA] = CHSV(_hue, isat, ibright);
+  rightled[idexB] = CHSV(_hue, isat, ibright);
   LEDS.show();
   delay(_delay);
 }
@@ -370,12 +411,15 @@ void random_red() {
   for (int i = 0; i < LED_COUNT; i++) {
     temprand = random(0, 100);
     if (temprand > 50) {
-      leds[i].r = 255;
+      leftled[i].r = 255;
+      rightled[i].r = 255;
     }
     if (temprand <= 50) {
-      leds[i].r = 0;
+      leftled[i].r = 0;
+      rightled[i].r = 0;
     }
-    leds[i].b = 0; leds[i].g = 0;
+    leftled[i].b = 0; leftled[i].g = 0;
+    rightled[i].b = 0; rightled[i].g = 0;
   }
   LEDS.show();
 }
@@ -395,28 +439,36 @@ void rule30() {
     iCW = adjacent_cw(i);
     iCCW = adjacent_ccw(i);
     if (ledsX[iCCW][0] > y && ledsX[i][0] > y && ledsX[iCW][0] > y) {
-      leds[i].r = 0;
+      leftled[i].r = 0;
+      rightled[i].r = 0;
     }
     if (ledsX[iCCW][0] > y && ledsX[i][0] > y && ledsX[iCW][0] <= y) {
-      leds[i].r = 0;
+      leftled[i].r = 0;
+      rightled[i].r = 0;
     }
     if (ledsX[iCCW][0] > y && ledsX[i][0] <= y && ledsX[iCW][0] > y) {
-      leds[i].r = 0;
+      leftled[i].r = 0;
+      rightled[i].r = 0;
     }
     if (ledsX[iCCW][0] > y && ledsX[i][0] <= y && ledsX[iCW][0] <= y) {
-      leds[i].r = 255;
+      leftled[i].r = 255;
+      rightled[i].r = 255;
     }
     if (ledsX[iCCW][0] <= y && ledsX[i][0] > y && ledsX[iCW][0] > y) {
-      leds[i].r = 255;
+      leftled[i].r = 255;
+      rightled[i].r = 255;
     }
     if (ledsX[iCCW][0] <= y && ledsX[i][0] > y && ledsX[iCW][0] <= y) {
-      leds[i].r = 255;
+      leftled[i].r = 255;
+      rightled[i].r = 255;
     }
     if (ledsX[iCCW][0] <= y && ledsX[i][0] <= y && ledsX[iCW][0] > y) {
-      leds[i].r = 255;
+      leftled[i].r = 255;
+      rightled[i].r = 255;
     }
     if (ledsX[iCCW][0] <= y && ledsX[i][0] <= y && ledsX[iCW][0] <= y) {
-      leds[i].r = 0;
+      leftled[i].r = 0;
+      rightled[i].r = 0;
     }
   }
   LEDS.show();
@@ -449,21 +501,28 @@ int adjacent_ccw(int i) {
 void randomMarch() {
   copy_led_array();
   int iCCW;
-  leds[0] = CHSV(random(0, 255), 255, 255);
+  leftled[0] = CHSV(random(0, 255), 255, 255);
+  rightled[0] = CHSV(random(0, 255), 255, 255);
   for (int idex = 1; idex < LED_COUNT ; idex++) {
     iCCW = adjacent_ccw(idex);
-    leds[idex].r = ledsX[iCCW][0];
-    leds[idex].g = ledsX[iCCW][1];
-    leds[idex].b = ledsX[iCCW][2];
+    leftled[idex].r = ledsX[iCCW][0];
+    leftled[idex].g = ledsX[iCCW][1];
+    leftled[idex].b = ledsX[iCCW][2];
+    rightled[idex].r = ledsX[iCCW][0];
+    rightled[idex].g = ledsX[iCCW][1];
+    rightled[idex].b = ledsX[iCCW][2];
   }
   LEDS.show();
   delay(_delay);
 }
 void copy_led_array() {
   for(int i = 0; i < LED_COUNT; i++ ) {
-    ledsX[i][0] = leds[i].r;
-    ledsX[i][1] = leds[i].g;
-    ledsX[i][2] = leds[i].b;
+    ledsX[i][0] = leftled[i].r;
+    ledsX[i][1] = leftled[i].g;
+    ledsX[i][2] = leftled[i].b;
+    ledsX[i][0] = rightled[i].r;
+    ledsX[i][1] = rightled[i].g;
+    ledsX[i][2] = rightled[i].b;
   }
 }
 
@@ -478,26 +537,38 @@ void rwbMarch() {
   }
   switch(idex) {
     case 0:
-      leds[0].r = 255;
-      leds[0].g = 0;
-      leds[0].b = 0;
+      leftled[0].r = 255;
+      leftled[0].g = 0;
+      leftled[0].b = 0;
+      rightled[0].r = 255;
+      rightled[0].g = 0;
+      rightled[0].b = 0;
       break;
     case 1:
-      leds[0].r = 255;
-      leds[0].g = 255;
-      leds[0].b = 255;
+      leftled[0].r = 255;
+      leftled[0].g = 255;
+      leftled[0].b = 255;
+      rightled[0].r = 255;
+      rightled[0].g = 255;
+      rightled[0].b = 255;
       break;
     case 2:
-      leds[0].r = 0;
-      leds[0].g = 0;
-      leds[0].b = 255;
+      leftled[0].r = 0;
+      leftled[0].g = 0;
+      leftled[0].b = 255;
+      rightled[0].r = 0;
+      rightled[0].g = 0;
+      rightled[0].b = 255;
       break;
   }
   for (int i = 1; i < LED_COUNT; i++) {
     iCCW = adjacent_ccw(i);
-    leds[i].r = ledsX[iCCW][0];
-    leds[i].g = ledsX[iCCW][1];
-    leds[i].b = ledsX[iCCW][2];
+    leftled[i].r = ledsX[iCCW][0];
+    leftled[i].g = ledsX[iCCW][1];
+    leftled[i].b = ledsX[iCCW][2];
+    rightled[i].r = ledsX[iCCW][0];
+    rightled[i].g = ledsX[iCCW][1];
+    rightled[i].b = ledsX[iCCW][2];
   }
   LEDS.show();
   delay(_delay);
@@ -514,10 +585,13 @@ void flame() {
   int ihue = hmin;
   for (int i = 0; i <= TOP_INDEX; i++) {
     ihue = ihue + hinc;
-    leds[i] = CHSV(ihue, isat, 255);
+    leftled[i] = CHSV(ihue, isat, 255);
+    rightled[i] = CHSV(ihue, isat, 255);
     int ih = horizontal_index(i);
-    leds[ih] = CHSV(ihue, isat, 255);
-    leds[TOP_INDEX].r = 255; leds[TOP_INDEX].g = 255; leds[TOP_INDEX].b = 255;
+    leftled[ih] = CHSV(ihue, isat, 255);
+    leftled[TOP_INDEX].r = 255; leftled[TOP_INDEX].g = 255; leftled[TOP_INDEX].b = 255;
+    rightled[ih] = CHSV(ihue, isat, 255);
+    rightled[TOP_INDEX].r = 255; rightled[TOP_INDEX].g = 255; rightled[TOP_INDEX].b = 255;
     LEDS.show();
     delay(idelay);
   }
@@ -529,7 +603,8 @@ void randomColorPop(){
   idex = random(0, LED_COUNT);
   ihue = random(0, 255);
   updateColor(0, 0, 0);
-  leds[idex] = CHSV(ihue, isat, 255);
+  leftled[idex] = CHSV(ihue, isat, 255);
+  rightled[idex] = CHSV(ihue, isat, 255);
   LEDS.show();
   delay(_delay);
 }
@@ -545,8 +620,10 @@ void rainbowVertical() {
   }
   int idexA = idex;
   int idexB = horizontal_index(idexA);
-  leds[idexA] = CHSV(ihue, isat, 255);
-  leds[idexB] = CHSV(ihue, isat, 255);
+  leftled[idexA] = CHSV(ihue, isat, 255);
+  leftled[idexB] = CHSV(ihue, isat, 255);
+  rightled[idexA] = CHSV(ihue, isat, 255);
+  rightled[idexB] = CHSV(ihue, isat, 255);
   LEDS.show();
   delay(_delay);
 }
@@ -557,7 +634,8 @@ void policeBlinker() {
   int thathue =(_hue + 160) % 255;
   for (int x = 0 ; x < 5; x++) {
     for (int i = 0 ; i < TOP_INDEX; i++) {
-      leds[i] = CHSV(_hue, isat, 255);
+      leftled[i] = CHSV(_hue, isat, 255);
+      rightled[i] = CHSV(_hue, isat, 255);
     }
     LEDS.show(); delay(_delay);
     updateColor(0, 0, 0);
@@ -565,7 +643,8 @@ void policeBlinker() {
   }
   for (int x = 0 ; x < 5; x++) {
     for (int i = TOP_INDEX ; i < LED_COUNT; i++) {
-      leds[i] = CHSV(thathue, isat, 255);
+      leftled[i] = CHSV(thathue, isat, 255);
+      rightled[i] = CHSV(thathue, isat, 255);
     }
     LEDS.show(); delay(_delay);
     updateColor(0, 0, 0);
@@ -586,9 +665,12 @@ void rgbPropeller() {
     int j0 =(idex + i + LED_COUNT - N12) % LED_COUNT;
     int j1 =(j0 + N3) % LED_COUNT;
     int j2 =(j1 + N3) % LED_COUNT;
-    leds[j0] = CHSV(_hue, isat, 255);
-    leds[j1] = CHSV(ghue, isat, 255);
-    leds[j2] = CHSV(bhue, isat, 255);
+    leftled[j0] = CHSV(_hue, isat, 255);
+    leftled[j1] = CHSV(ghue, isat, 255);
+    leftled[j2] = CHSV(bhue, isat, 255);
+    rightled[j0] = CHSV(_hue, isat, 255);
+    rightled[j1] = CHSV(ghue, isat, 255);
+    rightled[j2] = CHSV(bhue, isat, 255);
   }
   LEDS.show();
   delay(_delay);
@@ -599,14 +681,18 @@ void rgbPropeller() {
 void kitt() {
   int rand = random(0, TOP_INDEX);
   for (int i = 0; i < rand; i++) {
-    leds[TOP_INDEX + i] = CHSV(_hue, isat, 255);
-    leds[TOP_INDEX - i] = CHSV(_hue, isat, 255);
+    leftled[TOP_INDEX + i] = CHSV(_hue, isat, 255);
+    leftled[TOP_INDEX - i] = CHSV(_hue, isat, 255);
+    rightled[TOP_INDEX + i] = CHSV(_hue, isat, 255);
+    rightled[TOP_INDEX - i] = CHSV(_hue, isat, 255);
     LEDS.show();
     delay(_delay / rand);
   }
   for (int i = rand; i > 0; i--) {
-    leds[TOP_INDEX + i] = CHSV(_hue, isat, 0);
-    leds[TOP_INDEX - i] = CHSV(_hue, isat, 0);
+    leftled[TOP_INDEX + i] = CHSV(_hue, isat, 0);
+    leftled[TOP_INDEX - i] = CHSV(_hue, isat, 0);
+    rightled[TOP_INDEX + i] = CHSV(_hue, isat, 0);
+    rightled[TOP_INDEX - i] = CHSV(_hue, isat, 0);
     LEDS.show();
     delay(_delay / rand);
   }
@@ -617,16 +703,21 @@ void kitt() {
 void matrix() {
   int rand = random(0, 100);
   if (rand > 90) {
-    leds[0] = CHSV(_hue, isat, 255);
+    leftled[0] = CHSV(_hue, isat, 255);
+    rightled[0] = CHSV(_hue, isat, 255);
   }
   else {
-    leds[0] = CHSV(_hue, isat, 0);
+    leftled[0] = CHSV(_hue, isat, 0);
+    rightled[0] = CHSV(_hue, isat, 0);
   }
   copy_led_array();
   for (int i = 1; i < LED_COUNT; i++) {
-    leds[i].r = ledsX[i - 1][0];
-    leds[i].g = ledsX[i - 1][1];
-    leds[i].b = ledsX[i - 1][2];
+    leftled[i].r = ledsX[i - 1][0];
+    leftled[i].g = ledsX[i - 1][1];
+    leftled[i].b = ledsX[i - 1][2];
+    rightled[i].r = ledsX[i - 1][0];
+    rightled[i].g = ledsX[i - 1][1];
+    rightled[i].b = ledsX[i - 1][2];
   }
   LEDS.show();
   delay(_delay);
@@ -636,7 +727,8 @@ void matrix() {
 // smooth rotating rainbow
 void rainbowLoopFade() {
   ihue -= 1;
-  fill_rainbow(leds, LED_COUNT, ihue);
+  fill_rainbow(leftled, LED_COUNT, ihue);
+  fill_rainbow(rightled, LED_COUNT, ihue);
   LEDS.show();
   delay(_delay);
 }
@@ -837,9 +929,12 @@ void setPixelHeatColorBlue(int Pixel, byte temperature) {
 void fadeToCenter() {
  static uint8_t hue;
   for (int i = 0; i < LED_COUNT/2; i++) {   
-    leds.fadeToBlackBy(40);
-    leds[i] = CHSV(hue++,255,255);
-    leds(LED_COUNT/2,LED_COUNT-1) = leds(LED_COUNT/2 - 1 ,0);
+    leftled.fadeToBlackBy(40);
+    leftled[i] = CHSV(hue++,255,255);
+    rightled.fadeToBlackBy(40);
+    rightled[i] = CHSV(hue++,255,255);
+    leftled(LED_COUNT/2,LED_COUNT-1) = leftled(LED_COUNT/2 - 1 ,0);
+    rightled(LED_COUNT/2,LED_COUNT-1) = rightled(LED_COUNT/2 - 1 ,0);
     FastLED.delay(33);
   }  
 }
@@ -849,9 +944,11 @@ void fadeToCenter() {
 void runnerChameleon() {
     static uint8_t hue = 0;
   for (int i = 0; i < LED_COUNT; i++) {
-    leds[i] = CHSV(hue++, 255, 255);
+    leftled[i] = CHSV(hue++, 255, 255);
+    rightled[i] = CHSV(hue++, 255, 255);
     FastLED.show(); 
-     leds[i] = CRGB::Black;
+     leftled[i] = CRGB::Black;
+     rightled[i] = CRGB::Black;
 //    fadeall();
     delay(10);
   }
@@ -861,7 +958,8 @@ void runnerChameleon() {
 void blende() {
     static uint8_t hue = 0;
   for (int i = 0; i < LED_COUNT; i++) {
-    leds[i] = CHSV(hue++, 255, 255);
+    leftled[i] = CHSV(hue++, 255, 255);
+    rightled[i] = CHSV(hue++, 255, 255);
     FastLED.show(); 
 //     leds[i] = CRGB::Black;
     fadeall();
@@ -869,7 +967,8 @@ void blende() {
   }
 
   for (int i = (LED_COUNT)-1; i >= 0; i--) {
-    leds[i] = CHSV(hue++, 255, 255);
+    leftled[i] = CHSV(hue++, 255, 255);
+    rightled[i] = CHSV(hue++, 255, 255);
     FastLED.show();
 //     leds[i] = CRGB::Black;
     fadeall();
@@ -881,15 +980,18 @@ void blende() {
 void blende_2() {
     static uint8_t hue = 0;
   for (int i = 0; i < LED_COUNT; i++) {
-    leds[i] = CHSV(hue++, 255, 255);
+    leftled[i] = CHSV(hue++, 255, 255);
+    rightled[i] = CHSV(hue++, 255, 255);
     FastLED.show(); 
-    leds[i] = CRGB::Black;
+    leftled[i] = CRGB::Black;
+    rightled[i] = CRGB::Black;
     fadeall();
     delay(10);
   }
 
   for (int i = (LED_COUNT)-1; i >= 0; i--) {
-    leds[i] = CHSV(hue++, 255, 255);
+    leftled[i] = CHSV(hue++, 255, 255);
+    rightled[i] = CHSV(hue++, 255, 255);
     FastLED.show();
 //     leds[i] = CRGB::Black;
     fadeall();

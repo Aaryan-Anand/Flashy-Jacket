@@ -2,6 +2,10 @@
  *@author   Aaryan Anand <ReN>
  *@version  2.0
  *@link     https://github.com/Aaryan-Anand/Flashy-Jacket
+ *ESP8266 board manager version 2.7.4
+ *Arduino IDE 1.8.19
+ *ESP8266FS tool
+ *Tools->ESP8266 Sketch Data Upload
 **/
 
 #include <ESP8266WebServer.h> // auto installed after installing ESP boards
@@ -12,23 +16,27 @@
 // see: https://github.com/arduino/arduino-ide/issues/58
 
 #include <FS.h>
+#define FASTLED_INTERRUPT_RETRY_COUNT 0
 #include <FastLED.h> // by Daniel Garcia
 
-#define LED_COUNT 60  // the number of pixels on the strip
-#define DATA_PIN  14  // (D5 Wemos D1 Mini)
+#define LED_COUNT 37  // the number of pixels on the strip
 #define LeftDo   12   // (D6 Wemos D1 Mini)
 #define RightDo  13   // (D7 Wemos D1 Mini)
 #define LeftSw    5   // (D1 Wemos D1 Mini)
 #define RightSw   4   // (D2 Wemos D1 Mini)
 
+#define waveLength  5
+#define Frequency   10
+unsigned short Hue = 0;
+unsigned short Sat = 255;
 
 // SSID and password of the access point
-const char* ssid = "IPhone";
-const char* password = "yeahidkman";
+const char* ssid = "IPhone XR";
+const char* password = "12345678";
 
 // static IP address configuration
-IPAddress Ip(192,168,100,10); // IP address for your ESP
-IPAddress Gateway(192,168,100,1); // IP address of the access point
+IPAddress Ip(192,168,1,2); // IP address for your ESP
+IPAddress Gateway(192,168,1,1); // IP address of the access point
 IPAddress Subnet(255,255,255,0); // subnet mask
 
 // default values. You will change them via the Web interface
@@ -49,7 +57,9 @@ uint32_t lastChange;
 uint8_t currentEffect = 0;
 
 
-CRGBArray<LED_COUNT> leds;
+//CRGBArray<LED_COUNT> leds;
+CRGBArray<LED_COUNT> leftled;
+CRGBArray<LED_COUNT> rightled;
 // variables for basic effects settings
 uint8_t _delay = 20;
 uint8_t _step = 10;
@@ -68,9 +78,9 @@ void setup() {
   pinMode(RightSw, INPUT_PULLUP);
 
   // tell FastLED about the LED strip configuration
-  LEDS.addLeds<WS2812B, DATA_PIN, GRB>(leds, LED_COUNT);
-  LED.addLeds<WS2812B, LeftDo, GRB>(leftleds, LED_COUNT);
-  LED.addLeds<WS2812B, RightDo, GRB>(rightleds, LED_COUNT);
+  LEDS.addLeds<WS2812B, LeftDo, GRB>(leftled, LED_COUNT);
+  LEDS.addLeds<WS2812B, RightDo, GRB>(rightled, LED_COUNT);
+  LEDS.setMaxPowerInVoltsAndMilliamps(5, 3700);
   // set the brightness
   LEDS.setBrightness(brightness);
   updateColor(0,0,0);
@@ -88,6 +98,9 @@ void setup() {
   
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP()); // IP adress assigned to your ESP
+
+  turnSignal(false, 255, 255);
+  turnSignal(false, 255, 255);
 
   server.onNotFound([]() {
     if (!handleFileRead(server.uri())) // check if the file exists in the flash memory, if so, send it
@@ -107,7 +120,7 @@ void loop() {
   bool inLoop;
 
   bool leftsw  = !digitalRead(LeftSw);
-  bool rightsw = !digitalRead(LeftSw);
+  bool rightsw = !digitalRead(RightSw);
   uint8_t left = leftsw*255;
   uint8_t right = rightsw*255;
 
@@ -151,27 +164,27 @@ void loop() {
 
 void turnSignal(bool inLoop, uint8_t left, uint8_t right) {
   if (!inLoop) {
-    LED.clear();
-    LED.show();
+    LEDS.clear();
+    LEDS.show();
     inLoop = true;
   }
-  for (i = 0; i <= LED_COUNT - 1; i++) {
-    leftled[i] = CHSV (30, 255, left);
-    rightled[i] = CHSV (30, 255, right);
+  for (int i = 0; i <= LED_COUNT - 1; i++) {
+    leftled[i] = CHSV (23, 255, left);
+    rightled[i] = CHSV (23, 255, right);
     if (i >= waveLength) {
       leftled[i - waveLength] = CHSV (0, 0, 0);
       rightled[i - waveLength] = CHSV (0, 0, 0);
     }
-    LED.show();
+    LEDS.show();
     delay(Frequency);
     if (!inLoop) {
       break;
     }
   }
-  for (i = (nLed - 1) - waveLength; i <= nLed - 1; i++) {
+  for (int i = (LED_COUNT - 1) - waveLength; i <= LED_COUNT - 1; i++) {
     leftled[i] = CHSV (0, 0, 0);
     rightled[i] = CHSV (0, 0, 0);
-    LED.show();
+    LEDS.show();
     delay(Frequency);
     if (!inLoop) {
       break;
@@ -308,7 +321,8 @@ void messageHandler(uint8_t num, uint8_t * payload, size_t length) {
       // Serial.println("Client " + String(num) + ": Color: (" + String(r) + "," + String(g) + "," + String(b) + ")");
 
       for (int i = 0; i < LED_COUNT; i++) {
-        leds[i].setRGB(r,g,b);
+        leftled[i].setRGB(r,g,b);
+        rightled[i].setRGB(r,g,b);
       }
       LEDS.show();
       LEDS.show();
